@@ -28,6 +28,22 @@ res.render('index', {
 
 app.get('/', (req, res) => res.redirect('/stats'));
 
+app.get('/guilds', async (req, res) => {
+  try {
+    const guilds = client.guilds.cache.map(guild => ({
+      name: guild.name,
+      id: guild.id,
+      memberCount: guild.memberCount,
+      iconURL: guild.iconURL({ dynamic: true, size: 128 }) || null
+    }));
+
+    res.render('guilds', { guilds });
+  } catch (err) {
+    console.error("Error loading guilds:", err);
+    res.status(500).send("Failed to load guilds.");
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Dashboard running on port ${PORT}`));
 
