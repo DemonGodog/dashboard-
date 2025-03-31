@@ -8,8 +8,8 @@ function checkAuth(req, res, next) {
 }
 
 // Dashboard homepage route
-router.get('/dashboard', checkAuth, (req, res) => {
-  res.render('index', { user: req.user });
+app.get("/", (req, res) => {
+  res.send("Dashboard is live!");
 });
 
 // Root route (can redirect to dashboard or login)
