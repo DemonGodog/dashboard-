@@ -8,7 +8,8 @@ function checkAuth(req, res, next) {
 }
 
 // Dashboard homepage route
-app.get("/", (req, res) => {
+// Dashboard homepage route
+router.get("/dashboard", (req, res) => {
   res.send("Dashboard is live!");
 });
 
