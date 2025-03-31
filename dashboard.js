@@ -1,45 +1,34 @@
-require('dotenv').config();
-const express = require('express');
-const session = require('express-session');
-const passport = require('passport');
-const DiscordStrategy = require('passport-discord').Strategy;
-const path = require('path');
+require('dotenv').config(); const express = require('express'); const session = require('express-session'); const passport = require('passport'); const DiscordStrategy = require('passport-discord').Strategy; const path = require('path'); const { Client, GatewayIntentBits } = require('discord.js');
+
+const client = new Client({ intents: [ GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent ] });
 
 const app = express();
 
-// Set view engine to EJS and static files folder (if any)
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs'); app.set('views', path.join(__dirname, 'views'));
 
-// Session middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'keyboard cat',
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(session({ secret: process.env.SESSION_SECRET || 'supersecret', resave: false, saveUninitialized: false }));
 
-// Passport configuration
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
+passport.serializeUser((user, done) => done(null, user)); passport.deserializeUser((obj, done) => done(null, obj));
 
-passport.use(new DiscordStrategy({
-  clientID: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: process.env.CALLBACK_URL,
-  scope: ['identify', 'guilds']
-}, (accessToken, refreshToken, profile, done) => {
-  process.nextTick(() => done(null, profile));
-}));
+passport.use(new DiscordStrategy({ clientID: process.env.CLIENT_ID, clientSecret: process.env.CLIENT_SECRET, callbackURL: process.env.CALLBACK_URL, scope: ['identify', 'guilds'] }, (accessToken, refreshToken, profile, done) => { process.nextTick(() => done(null, profile)); }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize()); app.use(passport.session());
 
-// Routes
-app.use('/', require('./routes/auth'));
-app.use('/', require('./routes/dashboard'));
+// Bot stats route 
+app.get('/stats', async (req, res) => { try { const guildCount = client.guilds.cache.size; const userCount = client.users.cache.size; const uptime = Math.floor(client.uptime / 1000); const ping = client.ws.ping;
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Dashboard running on port ${PORT}`);
+res.render('index', {
+  guildCount,
+  userCount,
+  uptime,
+  ping
 });
+
+} catch (err) { console.error('Failed to render stats:', err); res.status(500).send('Error loading stats'); } });
+
+app.get('/', (req, res) => res.redirect('/stats'));
+
+const PORT = process.env.PORT || 3000; app.listen(PORT, () => console.log(Dashboard running on port ${PORT}));
+
+client.login(process.env.BOT_TOKEN);
+
