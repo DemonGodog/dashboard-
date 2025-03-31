@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demon God Dashboard</title>
+  <style>
+    /* Simple dark theme */
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 30px;
+    }
+    a {
+      color: #1e90ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Welcome, <%= user.username %>!</h1>
+      <p>This is your Demon God dashboard.</p>
+      <p><a href="/logout">Logout</a></p>
+    </header>
+    <section>
+      <h2>Dashboard Content</h2>
+      <p>From here, you can manage your bot settings, view logs, and more (coming soon).</p>
+    </section>
+  </div>
+</body>
+</html>
