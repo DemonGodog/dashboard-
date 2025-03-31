@@ -28,7 +28,8 @@ res.render('index', {
 
 app.get('/', (req, res) => res.redirect('/stats'));
 
-const PORT = process.env.PORT || 3000; app.listen(PORT, () => console.log(Dashboard running on port ${PORT}));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Dashboard running on port ${PORT}`));
 
 client.login(process.env.BOT_TOKEN);
 
